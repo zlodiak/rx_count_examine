@@ -2,7 +2,13 @@ document.addEventListener("DOMContentLoaded", ready);
 
 let currNum;
 let step;
-let startContent = 'Сайт рыбатекст поможет дизайнеру, верстальщику, вебмастеру сгенерировать несколько абзацев более менее осмысленного текста рыбы на русском языке, а начинающему оратору отточить навык публичных выступлений в домашних условиях. При создании генератора мы использовали небезизвестный универсальный код речей. Текст генерируется абзацами случайным образом от двух до десяти предложений в абзаце, что позволяет сделать текст более привлекательным и живым для визуально-слухового восприятия.По своей сути рыбатекст является альтернативой традиционному lorem ipsum, который вызывает у некторых людей недоумение при попытках прочитать рыбу текст. В отличии от lorem ipsum, текст рыба на русском языке наполнит любой макет непонятным смыслом и придаст неповторимый колорит советских времен.';
+let startContent = 'Это простейший тренажёр для детей, он проверяет способность считать. Предполагается, что: \
+<br>дети от 1 до 3 лет должны уметь считать до 5 \
+<br>дети от 4 до 5 лет должны уметь считать до 10 \
+<br>дети от 6 до 7 лет должны уметь считать до 30 \
+<br>дети от 7 до 9 лет должны уметь считать до 100 \
+	<br><br>Чтобы проверить знания участнику предлагается последовательно в порядке возрастания выбрать кубики с цифрами \
+';
 
 function init() {
 	currNum = -1;
@@ -33,7 +39,7 @@ function createPoints(count) {
 		pointEl.id = 'point_' + i;
 		pointEl.setAttribute('data-num', num);
 		pointEl.innerHTML = num;		
-		
+
 		contentInner.appendChild(pointEl);
 	};
 };
@@ -48,19 +54,18 @@ function ready() {
 
 	let subscription = menu
 	.map(e => e.target)
-	.filter(t => t.className === 'li')
+	.filter(t => t.className === 'start' || t.className === 'li')
 	.subscribe(function (t) {
 		clearContent();
-		createPoints(t.getAttribute('data-count'));
+    switch (t.className) {
+      case 'start':
+				document.getElementById('contentInner').innerHTML = startContent;
+        break;
+      case 'li':				
+				createPoints(t.getAttribute('data-count'));
+        break;
+    }
 	});
-
-	let subscription2 = menu
-	.map(e => e.target)
-	.filter(t => t.className === 'start')
-	.subscribe(function (t) {
-		clearContent();
-		document.getElementById('contentInner').innerHTML = startContent;
-	});		
 
 	let subscription3 = contentInner
 	.map(e => e.target)
@@ -72,12 +77,12 @@ function ready() {
 		deletePoint(t.id);
 
 		if(currNum > val) { 
-			alert('stop'); 
+			alert('Not correct'); 
 			init();
 		} else {
 			currNum = val;
 			if(step > 2) { 
-				alert('win'); 
+				alert('Correct'); 
 				init();
 			}
 		}	
